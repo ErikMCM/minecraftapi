@@ -1,6 +1,6 @@
 {
   "name": "minewrap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple Node.JS Minecraft API wrapper.",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/ErikMCM/minewrap#readme",
   "dependencies": {
-    "request": "^2.88.2"
+    "axios": "^0.21.1"
   }
 }

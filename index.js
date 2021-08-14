@@ -1,19 +1,26 @@
-exports.apiStatus = function() {
-    require('./functions/util/apiStatus').main()
-    .then(data =>{
-        Promise.resolve(data);
-    })
-    .catch(e =>{
-        Promise.reject(e)
-    });
+const fs = require('fs')
+let files = fs.readdirSync(__dirname + '/functions').filter(file => file.endsWith('.js'));
+
+module.exports = {
+    auth : {},
+    util : {}
 }
 
-exports.getUsernameFromUUID = function(passed1, passed2) {
-    require('./functions/usernames/getUUIDFromUsername.js').main(passed1, passed2)
-    .then(data =>{
-        Promise.resolve(data);
-    })
-    .catch(e =>{
-        Promise.reject(e)
-    });
+for (const file of files) {
+    let command = require(`./functions/${file}`);
+    module.exports[command.name] = command.main
+};
+
+files = fs.readdirSync(__dirname + '/functions/util').filter(file => file.endsWith('.js'));
+
+for (const file of files) {
+    let command = require(`./functions/util/${file}`);
+    module.exports.util[command.name] = command.main
+};
+
+files = fs.readdirSync(__dirname + '/functions/auth').filter(file => file.endsWith('.js'));
+
+for (const file of files) {
+    let command = require(`./functions/auth/${file}`);
+    module.exports.auth[command.name] = command.main
 }
