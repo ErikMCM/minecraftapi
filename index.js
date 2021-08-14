@@ -1,26 +1,24 @@
 const fs = require('fs')
-let files = fs.readdirSync(__dirname + '/functions').filter(file => file.endsWith('.js'));
 
-module.exports = {
-    auth : {},
-    util : {}
+//Get all folders in dir
+let managerExports = []
+let folders = fs.readdirSync(__dirname + '/functions')
+
+//Import folders to our exports and put them in a different array
+for (let i = 0; i < folders.length; i++) {
+    managerExports.push(folders[i])
+
+    module.exports[folders[i]] = {}
 }
 
-for (const file of files) {
-    let command = require(`./functions/${file}`);
-    module.exports[command.name] = command.main
-};
+//Import functions in managers to their respective function directories
+for (let i = 0; i < managerExports.length; i++) {
+    let files = fs.readdirSync(__dirname + '/functions/' + managerExports[i]).filter(file => file.endsWith('.js'));
 
-files = fs.readdirSync(__dirname + '/functions/util').filter(file => file.endsWith('.js'));
-
-for (const file of files) {
-    let command = require(`./functions/util/${file}`);
-    module.exports.util[command.name] = command.main
-};
-
-files = fs.readdirSync(__dirname + '/functions/auth').filter(file => file.endsWith('.js'));
-
-for (const file of files) {
-    let command = require(`./functions/auth/${file}`);
-    module.exports.auth[command.name] = command.main
+    for (const file of files) {
+        let cFunction = require(`./functions/${managerExports[i]}/${file}`);
+        
+        let base = module.exports[managerExports[i]]
+        base[cFunction.name] = cFunction.main
+    };
 }
